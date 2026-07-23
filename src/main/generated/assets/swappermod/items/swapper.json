@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "swappermod:item/swapper"
+    "model": "swappermod:block/swapper"
   }
 }

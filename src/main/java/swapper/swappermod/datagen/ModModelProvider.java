@@ -4,9 +4,7 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.model.ModelTemplate;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import swapper.swappermod.item.ModItem;
+import swapper.swappermod.block.ModBlocks;
 
 public class ModModelProvider extends FabricModelProvider {
 
@@ -16,12 +14,11 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators blockModelGenerators) {
-
+        blockModelGenerators.createTrivialCube(ModBlocks.SWAPPER);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerators) {
-        itemModelGenerators.generateFlatItem(ModItem.SWAPPER, ModelTemplates.CUBE);
 
     }
 }
