@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "Swapper",
+  "key": {
+    "H": "minecraft:hopper",
+    "R": "minecraft:redstone",
+    "S": "minecraft:cobblestone"
+  },
+  "pattern": [
+    "SSS",
+    "SHS",
+    "SRS"
+  ],
+  "result": {
+    "id": "swappermod:swapper"
+  }
+}
