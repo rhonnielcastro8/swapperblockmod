@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -21,7 +20,8 @@ import swapper.swappermod.SwapperMod;
 import java.util.function.Function;
 
 public class ModBlocks {
-    public static final Block SWAPPER = registerblock("swapper",
+
+    public static final Block SWAPPER = registerBlock("swapper",
             properties -> new Block(properties
                     .mapColor(MapColor.STONE)
                     .instrument(NoteBlockInstrument.BASEDRUM)
@@ -30,7 +30,7 @@ public class ModBlocks {
                     .sound(SoundType.STONE)
             ));
 
-    private  static Block registerblock(String name, Function<BlockBehaviour.Properties, Block> function) {
+    private  static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> function) {
         Block toRegister = function.apply(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(SwapperMod.MOD_ID, name))));
         registerBlockItem(name, toRegister);
         return Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(SwapperMod.MOD_ID, name), toRegister);
@@ -47,7 +47,6 @@ public class ModBlocks {
         SwapperMod.LOGGER.info("Register Mod Block for " + SwapperMod.MOD_ID);
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.REDSTONE_BLOCKS).register((creativeTab) -> {
-            creativeTab.accept(ModBlocks.SWAPPER.asItem());
             creativeTab.insertBefore(Blocks.CRAFTER, ModBlocks.SWAPPER);
         });
     }

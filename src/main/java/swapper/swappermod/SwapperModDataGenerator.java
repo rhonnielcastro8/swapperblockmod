@@ -2,6 +2,8 @@ package swapper.swappermod;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import swapper.swappermod.datagen.ModBlockLootTableProvider;
+import swapper.swappermod.datagen.ModBlockTagsProvider;
 import swapper.swappermod.datagen.ModModelProvider;
 
 public class SwapperModDataGenerator implements DataGeneratorEntrypoint {
@@ -10,5 +12,8 @@ public class SwapperModDataGenerator implements DataGeneratorEntrypoint {
 		var pack = fabricDataGenerator.createPack();
 
 		pack.addProvider(ModModelProvider::new);
+		pack.addProvider(ModBlockTagsProvider::new);
+		pack.addProvider(ModBlockLootTableProvider::new);
+
 	}
 }
