@@ -22,8 +22,8 @@ import java.util.function.Function;
 
 public class ModBlocks {
 
-    public static final Block SWAPPER = registerBlock("swapper",
-            properties -> new Swapper(BlockBehaviour.Properties.of()
+    public static final Block SWAPPER = registerBlock("swapper", properties ->
+            new Swapper(properties
                     .mapColor(MapColor.STONE)
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()

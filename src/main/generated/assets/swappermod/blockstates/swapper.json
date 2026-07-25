@@ -1,7 +1,26 @@
 {
   "variants": {
-    "": {
+    "facing=down": {
+      "model": "swappermod:block/swapper_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "swappermod:block/swapper",
+      "y": 90
+    },
+    "facing=north": {
       "model": "swappermod:block/swapper"
+    },
+    "facing=south": {
+      "model": "swappermod:block/swapper",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "swappermod:block/swapper_vertical"
+    },
+    "facing=west": {
+      "model": "swappermod:block/swapper",
+      "y": 270
     }
   }
 }
