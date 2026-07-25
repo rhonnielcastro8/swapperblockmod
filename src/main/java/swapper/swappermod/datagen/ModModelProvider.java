@@ -19,7 +19,6 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerators) {
-
-
+//        itemModelGenerators.createFlatItemModel(ModBlocks.SWAPPER);
     }
 }
