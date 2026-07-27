@@ -13,8 +13,7 @@ import swapper.swappermod.block.entity.custom.SwapperBlockEntity;
 
 public class ModBlockEntities {
 
-    public static final BlockEntityType<SwapperBlockEntity> SWAPPER_BLOCK_ENTITY =
-            register("swapper", SwapperBlockEntity::new, ModBlocks.SWAPPER);
+    public static BlockEntityType<SwapperBlockEntity> SWAPPER_BLOCK_ENTITY = register("swapper", SwapperBlockEntity::new, ModBlocks.SWAPPER_BLOCK);
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,
@@ -26,6 +25,6 @@ public class ModBlockEntities {
     }
 
     public static void initialize() {
-        SwapperMod.LOGGER.info("Register Mod Block for " + SwapperMod.MOD_ID);
+        SwapperMod.LOGGER.info("Register Block Entities for " + SwapperMod.MOD_ID);
     }
 }

@@ -19,7 +19,7 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         builder(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(getResourceKey(ModBlocks.SWAPPER));
+                .add(getResourceKey(ModBlocks.SWAPPER_BLOCK));
     }
 
     public static ResourceKey getResourceKey(Block block) {

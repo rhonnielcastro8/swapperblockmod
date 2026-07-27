@@ -5,6 +5,7 @@ import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swapper.swappermod.block.ModBlocks;
+import swapper.swappermod.block.entity.ModBlockEntities;
 
 public class SwapperMod implements ModInitializer {
 	public static final String MOD_ID = "swappermod";
@@ -13,7 +14,8 @@ public class SwapperMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModBlocks.registerModBlocks();
+		ModBlocks.initialize();
+		ModBlockEntities.initialize();
 	}
 
 	public static Identifier id(String path) {

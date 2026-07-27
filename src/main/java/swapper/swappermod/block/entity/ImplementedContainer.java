@@ -1,4 +1,4 @@
-package helper;
+package swapper.swappermod.block.entity;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;

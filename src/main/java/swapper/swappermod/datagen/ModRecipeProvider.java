@@ -22,14 +22,14 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(registries, output) {
             @Override
             public void buildRecipes() {
-                shaped(RecipeCategory.MISC, ModBlocks.SWAPPER)
+                shaped(RecipeCategory.MISC, ModBlocks.SWAPPER_BLOCK)
                         .pattern("SSS")
                         .pattern("SHS")
                         .pattern("SRS")
                         .define('S', Blocks.COBBLESTONE)
                         .define('H', Blocks.HOPPER)
                         .define('R', Blocks.REDSTONE_WIRE)
-                        .unlockedBy(getHasName(ModBlocks.SWAPPER), has(ModBlocks.SWAPPER))
+                        .unlockedBy(getHasName(ModBlocks.SWAPPER_BLOCK), has(ModBlocks.SWAPPER_BLOCK))
                         .group("Swapper")
                         .save(output);
 
