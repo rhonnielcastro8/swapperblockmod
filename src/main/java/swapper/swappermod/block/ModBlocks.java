@@ -16,14 +16,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import swapper.swappermod.SwapperMod;
-import swapper.swappermod.block.custom.Swapper;
+import swapper.swappermod.block.custom.SwapperBlock;
 
 import java.util.function.Function;
 
 public class ModBlocks {
 
     public static final Block SWAPPER = registerBlock("swapper", properties ->
-            new Swapper(properties
+            new SwapperBlock(properties
                     .mapColor(MapColor.STONE)
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
