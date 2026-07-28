@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swapper.swappermod.block.ModBlocks;
 import swapper.swappermod.block.entity.ModBlockEntities;
+import swapper.swappermod.menu.ModMenuTypes;
 
 public class SwapperMod implements ModInitializer {
 	public static final String MOD_ID = "swappermod";
@@ -16,6 +17,7 @@ public class SwapperMod implements ModInitializer {
 	public void onInitialize() {
 		ModBlocks.initialize();
 		ModBlockEntities.initialize();
+		ModMenuTypes.initialize();
 	}
 
 	public static Identifier id(String path) {
