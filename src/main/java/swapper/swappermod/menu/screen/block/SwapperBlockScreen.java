@@ -6,11 +6,12 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import swapper.swappermod.SwapperMod;
 import swapper.swappermod.menu.block.SwapperBlockMenu;
 
 public class SwapperBlockScreen extends AbstractContainerScreen<SwapperBlockMenu> {
 
-    private static final Identifier CONTAINER_TEXTURE = Identifier.withDefaultNamespace("resources/assets/swappermod/textures/gui/container/dispenser.png");
+    public static final Identifier CONTAINER_TEXTURE = SwapperMod.id("textures/gui/container/swapper.png");
 
     public SwapperBlockScreen(SwapperBlockMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);

@@ -18,6 +18,9 @@
 		"main": [
 			"swapper.swappermod.SwapperMod"
 		],
+		"client": [
+			"swapper.swappermod.menu.screen.ModScreens"
+		],
 		"fabric-datagen": [
 			"swapper.swappermod.SwapperModDataGenerator"
 		]
