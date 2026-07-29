@@ -9,7 +9,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
@@ -30,32 +29,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import swapper.swappermod.block.entity.custom.SwapperBlockEntity;
-import swapper.swappermod.swapbehavior.ArmorStandTarget;
-import swapper.swappermod.swapbehavior.ItemFrameTarget;
-import swapper.swappermod.swapbehavior.SwapTarget;
+import swapper.swappermod.swapitembehavior.ArmorStandTarget;
+import swapper.swappermod.swapitembehavior.ContainerTarget;
+import swapper.swappermod.swapitembehavior.ItemFrameTarget;
+import swapper.swappermod.swapitembehavior.SwapTarget;
 
 import java.util.List;
 
-/**
- * The Swapper block. On a redstone pulse (same edge-triggered pattern as vanilla's DispenserBlock)
- * it performs two independent, one-directional operations against whatever is in front of it:
- * extract one item into the bottom (extract) slots, then dispense one item from the top (dispense)
- * slots — see {@link SwapTarget} and its implementations for how each kind of target is handled.
- * <p>
- * Deliberate design choice: unlike a vanilla hopper, Swapper does NOT respect a vanilla container's
- * own {@link net.minecraft.world.WorldlyContainer} extraction restrictions (e.g. a Jukebox normally
- * blocks hopper extraction while a disc is playing). Swapper bypasses that on purpose — the whole
- * point of the block is unrestricted swapping. The one exception is another Swapper: extracting from
- * another Swapper still only reaches its bottom (extract) slots, since that's this mod's own
- * convention, not a vanilla rule.
- */
 public class SwapperBlock extends BaseEntityBlock {
 
     public static final MapCodec<SwapperBlock> CODEC = simpleCodec(SwapperBlock::new);
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final EnumProperty<Direction> FACING = DirectionalBlock.FACING;
-
-    /** Vanilla's level event id for the dispenser "click" sound (LevelEvent.SOUND_DISPENSE_FAIL). */
     private static final int SOUND_DISPENSE_CLICK = 1001;
 
     public SwapperBlock(Properties properties) {
@@ -91,8 +76,6 @@ public class SwapperBlock extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-    // ---------- Redstone trigger (same edge-triggered pattern as DispenserBlock) ----------
-
     @Override
     protected void neighborChanged(
             final BlockState state, final Level level, final BlockPos pos, final Block block,
@@ -118,8 +101,6 @@ public class SwapperBlock extends BaseEntityBlock {
         Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 
-    // ---------- The actual swap ----------
-
     private void swapFrom(final ServerLevel level, final BlockState state, final BlockPos pos) {
         if (!(level.getBlockEntity(pos) instanceof SwapperBlockEntity blockEntity)) {
             return;
@@ -131,27 +112,16 @@ public class SwapperBlock extends BaseEntityBlock {
 
         SwapTarget target = resolveTarget(level, blockEntity, targetPos, sideTouched);
 
-        // Phase 1: extract one item, hopper-style, into our bottom slots.
         extractInto(blockEntity, target);
 
-        // Phase 2: dispense one item, dropper-style, from our top slots — but only if there's
-        // still room to receive a swapped-in item later, OR the target has nothing left to give
-        // in the first place. Otherwise this would give without ever being able to take back.
         boolean targetEmpty = target == null || target.isEmpty();
         if (blockEntity.isBottomSlotAvailable() || targetEmpty) {
             dispenseFrom(level, pos, blockEntity, target, facing);
         }
 
-        // Always give audible feedback that the swapper fired, whether or not anything actually
-        // moved — matches vanilla dispenser's "click" on an empty/failed activation.
         level.levelEvent(SOUND_DISPENSE_CLICK, pos, 0);
     }
 
-    /**
-     * Figures out what kind of thing is in front of the Swapper and wraps it in a matching
-     * {@link SwapTarget} adapter, or returns null if there's nothing interactable there (in which
-     * case dispensing falls back to spawning an item into the world, and extraction is a no-op).
-     */
     private @Nullable SwapTarget resolveTarget(final ServerLevel level, final SwapperBlockEntity source, final BlockPos targetPos, final Direction sideTouched) {
         Container container = HopperBlockEntity.getContainerAt(level, targetPos);
         if (container != null) {
@@ -163,11 +133,9 @@ public class SwapperBlock extends BaseEntityBlock {
             return new ArmorStandTarget(stands.get(0));
         }
 
-        // Only match a frame actually mounted facing back toward the Swapper, not an unrelated
-        // frame on a different face of the same block space.
         List<ItemFrame> frames = level.getEntitiesOfClass(ItemFrame.class, new AABB(targetPos));
         for (ItemFrame frame : frames) {
-            if (frame.getDirection() == sideTouched) {
+            if (frame.getDirection() == sideTouched.getOpposite()) {
                 return new ItemFrameTarget(frame);
             }
         }
@@ -187,8 +155,6 @@ public class SwapperBlock extends BaseEntityBlock {
 
         int destSlot = blockEntity.getInsertBottomSlot(extracted);
         if (destSlot == -1) {
-            // Shouldn't normally happen given the isBottomSlotAvailable() check above, but guard
-            // anyway. Note the item has already left the target at this point.
             return;
         }
 
@@ -201,11 +167,6 @@ public class SwapperBlock extends BaseEntityBlock {
         }
     }
 
-    /**
-     * Pushes a single item from the next sequential top (dispense) slot into {@code target}.
-     * If there's no target, or it can't take it, the item is spawned into the world in front of
-     * the block instead — same fallback vanilla droppers use.
-     */
     private void dispenseFrom(final ServerLevel level, final BlockPos pos, final SwapperBlockEntity blockEntity, final @Nullable SwapTarget target, final Direction facing) {
         int dispenseSlot = blockEntity.getNextDispenseSlot();
         if (dispenseSlot == -1) {

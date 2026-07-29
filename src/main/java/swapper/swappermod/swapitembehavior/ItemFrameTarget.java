@@ -1,13 +1,12 @@
-package swapper.swappermod.swapbehavior;
+package swapper.swappermod.swapitembehavior;
 
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 
-/** Wraps an ItemFrame or GlowItemFrame entity (GlowItemFrame extends ItemFrame, same API). */
 public final class ItemFrameTarget implements SwapTarget {
     private final ItemFrame frame;
 
-    ItemFrameTarget(ItemFrame frame) {
+    public ItemFrameTarget(ItemFrame frame) {
         this.frame = frame;
     }
 
@@ -18,20 +17,27 @@ public final class ItemFrameTarget implements SwapTarget {
 
     @Override
     public ItemStack extractOne() {
-        ItemStack current = frame.getItem();
+        ItemStack current = frame.getItem().copy();
+
         if (current.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        frame.setItem(ItemStack.EMPTY);
+
+        frame.setItem(ItemStack.EMPTY, true);
         return current;
     }
 
     @Override
     public ItemStack insertOne(ItemStack stack) {
         if (!frame.getItem().isEmpty()) {
-            return stack; // already holding something — caller spawns this one into the world instead
+            return stack;
         }
-        frame.setItem(stack);
+
+        ItemStack single = stack.copy();
+        single.setCount(1);
+
+        System.out.println("From insertOne method" + single);
+        frame.setItem(single, true);
         return ItemStack.EMPTY;
     }
 }
