@@ -29,10 +29,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import swapper.swappermod.block.entity.custom.SwapperBlockEntity;
-import swapper.swappermod.swapitembehavior.ArmorStandTarget;
-import swapper.swappermod.swapitembehavior.ContainerTarget;
-import swapper.swappermod.swapitembehavior.ItemFrameTarget;
-import swapper.swappermod.swapitembehavior.SwapTarget;
+import swapper.swappermod.swapitembehavior.*;
+import swapper.swappermod.swapitembehavior.behavior.EquipmentSwapItemBehavior;
+import swapper.swappermod.swapitembehavior.behavior.InventorySwapItemBehavior;
+import swapper.swappermod.swapitembehavior.behavior.ItemFrameSwapItemBehavior;
 
 import java.util.List;
 
@@ -110,7 +110,7 @@ public class SwapperBlock extends BaseEntityBlock {
         BlockPos targetPos = pos.relative(facing);
         Direction sideTouched = facing.getOpposite();
 
-        SwapTarget target = resolveTarget(level, blockEntity, targetPos, sideTouched);
+        SwapItemBehavior target = resolveTarget(level, blockEntity, targetPos, sideTouched);
 
         extractInto(blockEntity, target);
 
@@ -122,28 +122,28 @@ public class SwapperBlock extends BaseEntityBlock {
         level.levelEvent(SOUND_DISPENSE_CLICK, pos, 0);
     }
 
-    private @Nullable SwapTarget resolveTarget(final ServerLevel level, final SwapperBlockEntity source, final BlockPos targetPos, final Direction sideTouched) {
+    private @Nullable SwapItemBehavior resolveTarget(final ServerLevel level, final SwapperBlockEntity source, final BlockPos targetPos, final Direction sideTouched) {
         Container container = HopperBlockEntity.getContainerAt(level, targetPos);
         if (container != null) {
-            return new ContainerTarget(container, source, sideTouched);
+            return new InventorySwapItemBehavior(container, source, sideTouched);
         }
 
         List<ArmorStand> stands = level.getEntitiesOfClass(ArmorStand.class, new AABB(targetPos));
         if (!stands.isEmpty()) {
-            return new ArmorStandTarget(stands.get(0));
+            return new EquipmentSwapItemBehavior(stands.get(0));
         }
 
         List<ItemFrame> frames = level.getEntitiesOfClass(ItemFrame.class, new AABB(targetPos));
         for (ItemFrame frame : frames) {
             if (frame.getDirection() == sideTouched.getOpposite()) {
-                return new ItemFrameTarget(frame);
+                return new ItemFrameSwapItemBehavior(frame);
             }
         }
 
         return null;
     }
 
-    private void extractInto(final SwapperBlockEntity blockEntity, final @Nullable SwapTarget target) {
+    private void extractInto(final SwapperBlockEntity blockEntity, final @Nullable SwapItemBehavior target) {
         if (target == null || !blockEntity.isBottomSlotAvailable()) {
             return;
         }
@@ -167,7 +167,7 @@ public class SwapperBlock extends BaseEntityBlock {
         }
     }
 
-    private void dispenseFrom(final ServerLevel level, final BlockPos pos, final SwapperBlockEntity blockEntity, final @Nullable SwapTarget target, final Direction facing) {
+    private void dispenseFrom(final ServerLevel level, final BlockPos pos, final SwapperBlockEntity blockEntity, final @Nullable SwapItemBehavior target, final Direction facing) {
         int dispenseSlot = blockEntity.getNextDispenseSlot();
         if (dispenseSlot == -1) {
             return;

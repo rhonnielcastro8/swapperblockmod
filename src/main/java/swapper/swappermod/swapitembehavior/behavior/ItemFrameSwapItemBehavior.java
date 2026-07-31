@@ -1,12 +1,13 @@
-package swapper.swappermod.swapitembehavior;
+package swapper.swappermod.swapitembehavior.behavior;
 
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
+import swapper.swappermod.swapitembehavior.SwapItemBehavior;
 
-public final class ItemFrameTarget implements SwapTarget {
+public final class ItemFrameSwapItemBehavior implements SwapItemBehavior {
     private final ItemFrame frame;
 
-    public ItemFrameTarget(ItemFrame frame) {
+    public ItemFrameSwapItemBehavior(ItemFrame frame) {
         this.frame = frame;
     }
 

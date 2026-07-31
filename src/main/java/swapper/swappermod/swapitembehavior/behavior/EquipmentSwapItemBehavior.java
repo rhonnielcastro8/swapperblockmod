@@ -1,10 +1,11 @@
-package swapper.swappermod.swapitembehavior;
+package swapper.swappermod.swapitembehavior.behavior;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
+import swapper.swappermod.swapitembehavior.SwapItemBehavior;
 
-public final class ArmorStandTarget implements SwapTarget {
+public final class EquipmentSwapItemBehavior implements SwapItemBehavior {
 
     private static final EquipmentSlot[] SLOT_PRIORITY = {
             EquipmentSlot.HEAD,
@@ -17,7 +18,7 @@ public final class ArmorStandTarget implements SwapTarget {
 
     private final ArmorStand standEntity;
 
-    public ArmorStandTarget(ArmorStand standEntity) {
+    public EquipmentSwapItemBehavior(ArmorStand standEntity) {
         this.standEntity = standEntity;
     }
 
@@ -52,19 +53,16 @@ public final class ArmorStandTarget implements SwapTarget {
             return ItemStack.EMPTY;
         }
 
-        // Vanilla Dispenser Check: asks the Armor Stand if it can equip this item
         if (standEntity.canEquipWithDispenser(stack)) {
             EquipmentSlot slot = standEntity.getEquipmentSlotForItem(stack);
 
-            // Only equip if that slot is empty
             if (standEntity.getItemBySlot(slot).isEmpty()) {
                 ItemStack equip = stack.split(1);
                 standEntity.setItemSlot(slot, equip);
-                return stack; // Returns remaining stack
+                return stack;
             }
         }
 
-        // Return unchanged stack if equip failed or slot was occupied
         return stack;
     }
 }

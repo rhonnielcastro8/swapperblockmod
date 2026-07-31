@@ -2,7 +2,7 @@ package swapper.swappermod.swapitembehavior;
 
 import net.minecraft.world.item.ItemStack;
 
-public interface SwapTarget {
+public interface SwapItemBehavior {
     boolean isEmpty();
 
     ItemStack extractOne();

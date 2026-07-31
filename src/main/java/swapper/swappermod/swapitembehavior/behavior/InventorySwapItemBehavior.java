@@ -1,4 +1,4 @@
-package swapper.swappermod.swapitembehavior;
+package swapper.swappermod.swapitembehavior.behavior;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -7,13 +7,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import swapper.swappermod.block.entity.custom.SwapperBlockEntity;
+import swapper.swappermod.swapitembehavior.SwapItemBehavior;
 
-public final class ContainerTarget implements SwapTarget {
+public final class InventorySwapItemBehavior implements SwapItemBehavior {
     private final Container container;
     private final SwapperBlockEntity source;
     private final Direction sideTouched;
 
-    public ContainerTarget(Container container, SwapperBlockEntity source, Direction sideTouched) {
+    public InventorySwapItemBehavior(Container container, SwapperBlockEntity source, Direction sideTouched) {
         this.container = container;
         this.source = source;
         this.sideTouched = sideTouched;
@@ -40,14 +41,11 @@ public final class ContainerTarget implements SwapTarget {
                 return ItemStack.EMPTY;
             }
 
-            // In modern Minecraft (1.20+), JukeboxBlockEntity has popOutRecord() or clearContent()
-            // Setting the item to empty and notifying changes ensures the music stops & blockstate updates
             ItemStack taken = record.copy();
             taken.setCount(1);
 
             record.shrink(1);
             if (record.isEmpty()) {
-                // Clears the item, stops music playback, and updates the blockstate
                 jukebox.setTheItem(ItemStack.EMPTY);
             } else {
                 jukebox.setTheItem(record);
@@ -56,10 +54,7 @@ public final class ContainerTarget implements SwapTarget {
             return taken;
         }
 
-        // Standard Container Extraction Logic
         boolean targetIsSwapper = container instanceof SwapperBlockEntity;
-
-        // Respect WorldlyContainer / Side-based extraction rules if implemented (e.g. Composter, Furnace)
         if (container instanceof WorldlyContainer worldly) {
             int[] slots = worldly.getSlotsForFace(sideTouched);
             for (int slot : slots) {
